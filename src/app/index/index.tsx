@@ -3,6 +3,7 @@ import { styles } from "./styles";
 import { Ingredient } from "@/components/Ingredient";
 import { useState } from "react";
 import { Selected } from "@/components/Selected";
+import { router } from "expo-router";
 
 export default function Index() {
   const [selected, setSelected] = useState<String[]>([]);
@@ -22,6 +23,10 @@ export default function Index() {
       { text: "Não", style: "cancel" },
       { text: "Sim", onPress: () => setSelected([]) },
     ]);
+  }
+
+  function handleSearch(){
+    router.navigate("/recipes/")
   }
 
   return (
@@ -51,7 +56,7 @@ export default function Index() {
         <Selected
           quantity={selected.length}
           onClear={handleClearSelected}
-          onSearch={() => {}}
+          onSearch={handleSearch}
         />
       )}
     </View>
