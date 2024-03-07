@@ -4,10 +4,28 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { Recipe } from "@/components/Recipe";
 import { Ingredients } from "@/components/Ingredients";
+import { useEffect, useState } from "react";
+import { services } from "@/services";
 
 export default function Recipes() {
-  const params = useLocalSearchParams<{ingredientsIds: string}>()
-  const ingredientsIds = params.ingredientsIds.split(",")
+  const [ingredients, setIngredients] = useState<
+    IngredientResponse[]
+  >([]);
+  const [recipes, setRecipes] = useState<RecipeResponse[]>([]);
+  const params = useLocalSearchParams<{ ingredientsIds: string }>();
+  const ingredientsIds = params.ingredientsIds.split(",");
+
+  useEffect(() => {
+    services.ingredients
+      .findByIds(ingredientsIds)
+      .then(setIngredients);
+  });
+
+  useEffect(() => {
+    services.recipes
+      .findByIngredientsIds(ingredientsIds)
+      .then(setRecipes);
+  });
 
   return (
     <View style={styles.container}>
@@ -19,21 +37,14 @@ export default function Recipes() {
         />
         <Text style={styles.title}>Ingredientes</Text>
       </View>
-      
+
+      <Ingredients ingredients={ingredients} />
+
       <FlatList
-          data={["1"]}
-          keyExtractor={(item) => item}
-          renderItem={() => (
-            <Recipe
-              recipe={{
-                name: "Omelete",
-                image:
-                  "https://img.cybercook.com.br/receitas/105/omelete-classica-1.jpeg",
-                minutes: 10,
-              }}
-            />
-          )}
-        />
+        data={recipes}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <Recipe recipe={item} />}
+      />
     </View>
   );
 }

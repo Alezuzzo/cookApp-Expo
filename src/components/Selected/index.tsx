@@ -23,7 +23,7 @@ export function Selected({ quantity, onClear, onSearch }: Props) {
     >
       <View style={styles.header}>
         <Text style={styles.label}>
-          {quantity} ingrdientes selecionados
+          {quantity} ingredientes selecionados
         </Text>
         <MaterialIcons
           name="close"
